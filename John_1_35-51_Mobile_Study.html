@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>John 1:35-51 Mobile Bible Study</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
+            color: #F8F9FA;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 1.4em;
+            margin-bottom: 5px;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .header p {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .setup-panel {
+            background: rgba(255, 255, 255, 0.95);
+            margin: 10px;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .setup-panel h3 {
+            color: #2C3E50;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            text-align: center;
+        }
+
+        .bible-info {
+            background: linear-gradient(135deg, #F8F9FA 0%, #E9ECEF 100%);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            border: 2px solid #667eea;
+        }
+
+        .bible-info p {
+            margin: 5px 0;
+            color: #2C3E50;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .bible-info p:first-child {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.95);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .btn-secondary:active {
+            transform: scale(0.95);
+        }
+
+        .study-container {
+            flex: 1;
+            display: none;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.95);
+            margin: 10px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .study-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+        }
+
+        .progress-info {
+            font-size: 1em;
+            margin-bottom: 5px;
+        }
+
+        .sentence-display {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            min-height: 60vh;
+        }
+
+        .chinese-text {
+            font-size: 1.8em;
+            color: #2C3E50;
+            margin-bottom: 20px;
+            line-height: 1.4;
+            font-weight: 400;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            cursor: default;
+            padding: 10px;
+            background: rgba(248, 249, 250, 0.8);
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+        }
+
+        .english-text {
+            font-size: 2.2em;
+            color: #667eea;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 20px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #FFF8DC 0%, #F5F5DC 100%);
+            border: 3px solid #667eea;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            max-width: 95%;
+            word-wrap: break-word;
+            line-height: 1.3;
+            margin-bottom: 20px;
+            touch-action: manipulation;
+        }
+
+        .english-text:active {
+            transform: scale(0.98);
+        }
+
+        .english-text.playing {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #8B0000;
+            transform: scale(1.02);
+            animation: glow 1.5s infinite alternate;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+        }
+
+        .word {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 3px 6px;
+            border-radius: 6px;
+            display: inline-block;
+            touch-action: manipulation;
+        }
+
+        .word:active {
+            background: rgba(102, 126, 234, 0.3);
+            transform: scale(1.05);
+        }
+
+        .play-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            font-size: 2.5em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            touch-action: manipulation;
+        }
+
+        .play-btn:active {
+            transform: scale(0.9);
+        }
+
+        .play-btn.playing {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            animation: bounce 1s infinite;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
+            100% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.8); }
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #F8F9FA 0%, #E9ECEF 100%);
+            border-top: 1px solid #DEE2E6;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            flex: 1;
+            justify-content: center;
+            touch-action: manipulation;
+        }
+
+        .nav-btn:active {
+            transform: scale(0.95);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-prev {
+            background: linear-gradient(135deg, #6C757D 0%, #ADB5BD 100%);
+            color: white;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, #28A745 0%, #20C997 100%);
+            color: white;
+        }
+
+        .btn-back {
+            background: linear-gradient(135deg, #DC3545 0%, #FD7E14 100%);
+            color: white;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 6px;
+            background: #E9ECEF;
+            border-radius: 3px;
+            margin: 0 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #28A745 0%, #20C997 100%);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .message {
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin: 10px 0;
+            text-align: center;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, #F8D7DA 0%, #F5C6CB 100%);
+            color: #721C24;
+            border: 2px solid #F5C6CB;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #D4EDDA 0%, #C3E6CB 100%);
+            color: #155724;
+            border: 2px solid #C3E6CB;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 超小屏幕优化 */
+        @media (max-width: 375px) {
+            .header h1 {
+                font-size: 1.2em;
+            }
+            
+            .chinese-text {
+                font-size: 1.5em;
+            }
+            
+            .english-text {
+                font-size: 1.8em;
+                padding: 15px;
+            }
+            
+            .play-btn {
+                width: 70px;
+                height: 70px;
+                font-size: 2.2em;
+            }
+        }
+
+        /* 横屏优化 */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .sentence-display {
+                min-height: 40vh;
+                padding: 10px;
+            }
+            
+            .chinese-text {
+                font-size: 1.4em;
+                margin-bottom: 10px;
+            }
+            
+            .english-text {
+                font-size: 1.8em;
+                padding: 15px;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📖 John 1:35-51 Bible Study</h1>
+        <p>Tap English text to hear pronunciation</p>
+    </div>
+
+    <div id="setupPanel" class="setup-panel">
+        <h3>📚 John Chapter 1:35-51</h3>
+        <div class="bible-info">
+            <p>Ready to study John Chapter 1:35-51</p>
+            <p>Tap "Start Learning" to begin your Bible study</p>
+            <p style="font-size: 12px; color: #666; margin-top: 10px;">
+                📱 For Android users: If audio doesn't work, try using Chrome browser and ensure your device volume is on.
+            </p>
+        </div>
+        
+        <button id="processText" class="btn btn-primary">
+            <span>🚀</span> Start Learning
+        </button>
+        
+        <button id="testAudio" class="btn btn-secondary">
+            <span>🔊</span> Test Audio
+        </button>
+    </div>
+
+    <div id="studyContainer" class="study-container">
+        <div class="study-header">
+            <div class="progress-info">
+                Verse <span id="currentSentence">1</span> of <span id="totalSentences">0</span>
+            </div>
+        </div>
+        
+        <div class="sentence-display">
+            <div id="chineseText" class="chinese-text"></div>
+            <div id="englishText" class="english-text"></div>
+            <button id="playBtn" class="play-btn" title="Tap to read aloud">
+                🔊
+            </button>
+        </div>
+        
+        <div class="navigation">
+            <button id="prevBtn" class="nav-btn btn-prev" disabled>
+                <span>⬅️</span> Prev
+            </button>
+            
+            <div class="progress-bar">
+                <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+            </div>
+            
+            <button id="nextBtn" class="nav-btn btn-next">
+                Next <span>➡️</span>
+            </button>
+        </div>
+        
+        <div class="navigation" style="justify-content: center; padding-top: 5px;">
+            <button id="backBtn" class="nav-btn btn-back">
+                <span>🏠</span> Back to Settings
+            </button>
+        </div>
+    </div>
+
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <div>Loading pronunciation...</div>
+    </div>
+
+    <script>
+        // Global variables
+        let processedSentences = [];
+        let currentSentenceIndex = 0;
+        let isPlaying = false;
+
+        // DOM elements
+        const processTextBtn = document.getElementById('processText');
+        const setupPanel = document.getElementById('setupPanel');
+        const studyContainer = document.getElementById('studyContainer');
+        const loading = document.getElementById('loading');
+        
+        // Study interface elements
+        const currentSentenceSpan = document.getElementById('currentSentence');
+        const totalSentencesSpan = document.getElementById('totalSentences');
+        const chineseText = document.getElementById('chineseText');
+        const englishText = document.getElementById('englishText');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const backBtn = document.getElementById('backBtn');
+        const progressFill = document.getElementById('progressFill');
+        const playBtn = document.getElementById('playBtn');
+
+        // John 1:35-51 content
+        const johnChapter1Verses = `约翰福音 1章35-51 John 1:35-51 (NIV)
+
+35 当时，施洗的约翰和两个门徒站在那里。
+35 The next day John was there again with two of his disciples.
+
+36 见到耶稣行走，就说："看哪，神的羔羊！"
+36 When he saw Jesus passing by, he said, "Look, the Lamb of God!"
+
+37 那两个门徒听见他的话，就跟从了耶稣。
+37 When the two disciples heard him say this, they followed Jesus.
+
+38 耶稣转过身来，看见他们跟着，就问他们说："你们要什么？"他们说："拉比（翻出来就是夫子），你在哪里住？"
+38 Turning around, Jesus saw them following and asked, "What do you want?" They said, "Rabbi" (which means "Teacher"), "where are you staying?"
+
+39 他说："你们来看。"他们就去看他在那里住，便与他同住，那日约有十个时辰。
+39 "Come," he replied, "and you will see." So they went and saw where he was staying, and they spent that day with him. It was about the tenth hour.
+
+40 这两个人一听见约翰的话，就跟从了耶稣。
+40 Andrew, Simon Peter's brother was one of the two who heard what John had said and who had followed Jesus.
+
+41 他先找着自己的哥哥西门，对他说："我们遇见弥赛亚了（弥赛亚翻出来就是基督）。"
+41 The first thing Andrew did was to find his brother Simon and tell him, "We have found the Messiah" (that is, the Christ).
+
+42 就领他去见耶稣。耶稣看着他说："你是约翰的儿子西门，你要称为矶法（矶法翻出来就是彼得）。"
+42 And he brought him to Jesus. Jesus looked at him and said, "You are Simon son of John. You will be called Cephas" (which, when translated, is Peter).
+
+43 又次日，耶稣想要往加利利去，遇见腓力，就对他说："来跟从我吧！"
+43 The next day Jesus decided to leave for Galilee. Finding Philip, he said to him, "Follow me."
+
+44 这腓力是伯赛大人，和安得烈、彼得同城。
+44 Philip, like Andrew and Peter, was from the town of Bethsaida.
+
+45 腓力找着拿但业，对他说："摩西在律法上所写的和众先知所记的那一位，我们遇见了，就是约瑟的儿子拿撒勒人耶稣。"
+45 Philip found Nathanael and told him, "We have found the one Moses wrote about in the Law, and about whom the prophets also wrote—Jesus of Nazareth, the son of Joseph."
+
+46 拿但业对他说："拿撒勒还能出什么好的吗？"腓力说："你来看！"
+46 "Nazareth! Can anything good come from there?" Nathanael asked. "Come and see," said Philip.
+
+47 耶稣看见拿但业来，就指着他说："看哪，这是个真以色列人，他心里是没有诡诈的。"
+47 When Jesus saw Nathanael approaching, he said of him, "Here truly is an Israelite in whom there is no deceit."
+
+48 拿但业对耶稣说："你从哪里知道我呢？"耶稣回答说："腓力还没有招呼你，你在无花果树底下，我就看见你了。"
+48 "How do you know me?" Nathanael asked. Jesus answered, "I saw you while you were still under the fig tree before Philip called you."
+
+49 拿但业说："拉比，你是神的儿子，你是以色列的王！"
+49 Then Nathanael declared, "Rabbi, you are the Son of God; you are the king of Israel."
+
+50 耶稣对他说："因为我说'在无花果树底下看见你'，你就信吗？你将要看见比这更大的事。"
+50 Jesus said, "You believe because I told you I saw you under the fig tree. You will see greater things than that."
+
+51 又说："我实实在在地告诉你们，你们将要看见天开了，神的使者上去下来在人子身上。"
+51 He then added, "Very truly I tell you, you will see 'heaven open, and the angels of God ascending and descending on' the Son of Man."`;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+        });
+
+        // Set up event listeners
+        function setupEventListeners() {
+            processTextBtn.addEventListener('click', processText);
+            document.getElementById('testAudio').addEventListener('click', testAudio);
+            backBtn.addEventListener('click', backToSetup);
+            prevBtn.addEventListener('click', previousSentence);
+            nextBtn.addEventListener('click', nextSentence);
+            englishText.addEventListener('click', speakCurrentSentence);
+            playBtn.addEventListener('click', speakCurrentSentence);
+            
+            // Touch events for better mobile experience
+            englishText.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+            });
+            
+            playBtn.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+            });
+        }
+
+        // Test audio function
+        async function testAudio() {
+            const testText = "Hello, this is a test of the audio system.";
+            showMessage('Testing audio...', 'info');
+            
+            try {
+                await tryMultiplePronunciationMethods(testText);
+                showMessage('Audio test successful! 🔊', 'success');
+            } catch (error) {
+                console.error('Audio test failed:', error);
+                showMessage('Audio test failed. Please check your device settings and try again.', 'error');
+            }
+        }
+
+        // Process text
+        function processText() {
+            try {
+                processedSentences = parseText(johnChapter1Verses);
+                if (processedSentences.length === 0) {
+                    showMessage('No valid sentences found', 'error');
+                    return;
+                }
+                
+                currentSentenceIndex = 0;
+                showStudyInterface();
+                displayCurrentSentence();
+                showMessage('John Chapter 1:35-51 loaded successfully!', 'success');
+            } catch (error) {
+                showMessage('Text processing failed: ' + error.message, 'error');
+            }
+        }
+
+        // Parse text
+        function parseText(text) {
+            text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+            const lines = text.split('\n').filter(line => line.trim());
+            const processedSentences = [];
+            
+            let i = 0;
+            while (i < lines.length) {
+                const line = lines[i].trim();
+                if (!line) {
+                    i++;
+                    continue;
+                }
+                
+                if (line.includes('章') || line.includes('Chapter') || line.includes('(NIV)') || line.includes('(ESV)')) {
+                    i++;
+                    continue;
+                }
+                
+                const verseMatch = line.match(/^(\d+)\s+(.+)$/);
+                if (verseMatch) {
+                    const verseNum = verseMatch[1];
+                    const verseText = verseMatch[2];
+                    
+                    if (i + 1 < lines.length) {
+                        const nextLine = lines[i + 1].trim();
+                        const nextVerseMatch = nextLine.match(/^(\d+)\s+(.+)$/);
+                        
+                        if (nextVerseMatch && nextVerseMatch[1] === verseNum) {
+                            const englishText = nextVerseMatch[2];
+                            
+                            let chinesePart = '';
+                            let englishPart = '';
+                            
+                            if (isEnglishText(verseText)) {
+                                englishPart = verseText;
+                                chinesePart = englishText;
+                            } else {
+                                chinesePart = verseText;
+                                englishPart = englishText;
+                            }
+                            
+                            processedSentences.push({
+                                chinese: chinesePart,
+                                english: englishPart,
+                                verseNumber: verseNum,
+                                originalLine: line + '\n' + nextLine
+                            });
+                            
+                            i += 2;
+                            continue;
+                        }
+                    }
+                    
+                    if (isEnglishText(verseText)) {
+                        processedSentences.push({
+                            chinese: '',
+                            english: verseText,
+                            verseNumber: verseNum,
+                            originalLine: line
+                        });
+                    } else {
+                        processedSentences.push({
+                            chinese: verseText,
+                            english: '',
+                            verseNumber: verseNum,
+                            originalLine: line
+                        });
+                    }
+                } else {
+                    if (isEnglishText(line)) {
+                        processedSentences.push({
+                            chinese: '',
+                            english: line,
+                            originalLine: line
+                        });
+                    } else {
+                        processedSentences.push({
+                            chinese: line,
+                            english: '',
+                            originalLine: line
+                        });
+                    }
+                }
+                
+                i++;
+            }
+            
+            return processedSentences;
+        }
+
+        // Determine if text is English
+        function isEnglishText(text) {
+            const englishPattern = /[a-zA-Z]/;
+            const chinesePattern = /[\u4E00-\u9FFF]/;
+            
+            const hasEnglish = englishPattern.test(text);
+            const hasChinese = chinesePattern.test(text);
+            
+            return hasEnglish && !hasChinese;
+        }
+
+        // Show study interface
+        function showStudyInterface() {
+            setupPanel.style.display = 'none';
+            studyContainer.style.display = 'flex';
+            totalSentencesSpan.textContent = processedSentences.length;
+        }
+
+        // Return to setup interface
+        function backToSetup() {
+            setupPanel.style.display = 'block';
+            studyContainer.style.display = 'none';
+            stopAllPlayback();
+        }
+
+        // Display current sentence
+        function displayCurrentSentence() {
+            if (currentSentenceIndex >= processedSentences.length) return;
+            
+            const sentence = processedSentences[currentSentenceIndex];
+            
+            // Display Chinese
+            let chineseDisplay = '';
+            if (sentence.verseNumber) {
+                chineseDisplay = `${sentence.verseNumber} ${sentence.chinese || ''}`;
+            } else {
+                chineseDisplay = sentence.chinese || '';
+            }
+            chineseText.textContent = chineseDisplay;
+            
+            // Display English - clickable
+            if (sentence.english) {
+                let englishDisplay = '';
+                if (sentence.verseNumber) {
+                    englishDisplay = `${sentence.verseNumber} ${sentence.english}`;
+                } else {
+                    englishDisplay = sentence.english;
+                }
+                
+                englishText.innerHTML = englishDisplay.replace(/([a-zA-Z]+)/g, '<span class="word" data-word="$1">$1</span>');
+                englishText.style.display = 'block';
+                
+                // Add word tap events
+                englishText.querySelectorAll('.word').forEach(word => {
+                    word.addEventListener('touchend', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        speakWord(word.dataset.word);
+                    });
+                });
+            } else {
+                englishText.style.display = 'none';
+            }
+            
+            // Update progress
+            currentSentenceSpan.textContent = currentSentenceIndex + 1;
+            updateProgress();
+            updateNavigationButtons();
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const progress = ((currentSentenceIndex + 1) / processedSentences.length) * 100;
+            progressFill.style.width = progress + '%';
+        }
+
+        // Update navigation button states
+        function updateNavigationButtons() {
+            prevBtn.disabled = currentSentenceIndex === 0;
+            nextBtn.disabled = currentSentenceIndex >= processedSentences.length - 1;
+        }
+
+        // Previous sentence
+        function previousSentence() {
+            if (currentSentenceIndex > 0) {
+                currentSentenceIndex--;
+                displayCurrentSentence();
+            }
+        }
+
+        // Next sentence
+        function nextSentence() {
+            if (currentSentenceIndex < processedSentences.length - 1) {
+                currentSentenceIndex++;
+                displayCurrentSentence();
+            }
+        }
+
+        // Speak current sentence with multiple fallback options
+        async function speakCurrentSentence() {
+            if (isPlaying) {
+                stopAllPlayback();
+                return;
+            }
+            
+            const sentence = processedSentences[currentSentenceIndex];
+            if (!sentence || !sentence.english) return;
+            
+            showLoading(true);
+            isPlaying = true;
+            englishText.classList.add('playing');
+            playBtn.classList.add('playing');
+            
+            try {
+                // Try multiple pronunciation methods
+                await tryMultiplePronunciationMethods(sentence.english);
+            } catch (error) {
+                console.error('All pronunciation methods failed:', error);
+                showMessage('Unable to play audio. Please check your device settings.', 'error');
+            } finally {
+                showLoading(false);
+                isPlaying = false;
+                englishText.classList.remove('playing');
+                playBtn.classList.remove('playing');
+            }
+        }
+
+        // Try multiple pronunciation methods
+        async function tryMultiplePronunciationMethods(text) {
+            // Method 1: Try Google Translate TTS (more reliable for mobile)
+            try {
+                await speakWithGoogleTTS(text);
+                return;
+            } catch (error) {
+                console.log('Google TTS failed, trying next method...');
+            }
+            
+            // Method 2: Try browser speech synthesis with better settings
+            try {
+                await speakWithBrowserEnhanced(text);
+                return;
+            } catch (error) {
+                console.log('Browser TTS failed, trying next method...');
+            }
+            
+            // Method 3: Try Microsoft Edge TTS
+            try {
+                await speakWithMicrosoftTTS(text);
+                return;
+            } catch (error) {
+                console.log('Microsoft TTS failed, trying next method...');
+            }
+            
+            // Method 4: Try simple audio file approach
+            try {
+                await speakWithAudioFile(text);
+                return;
+            } catch (error) {
+                console.log('Audio file method failed');
+                throw new Error('All pronunciation methods failed');
+            }
+        }
+
+        // Google Translate TTS (more reliable for mobile)
+        async function speakWithGoogleTTS(text) {
+            const apiUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=en&client=tw-ob`;
+            
+            const response = await fetch(apiUrl, {
+                method: 'GET',
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error('Google TTS request failed');
+            }
+            
+            const audioBlob = await response.blob();
+            const audioUrl = URL.createObjectURL(audioBlob);
+            const audio = new Audio(audioUrl);
+            
+            return new Promise((resolve, reject) => {
+                audio.onended = () => {
+                    URL.revokeObjectURL(audioUrl);
+                    resolve();
+                };
+                
+                audio.onerror = () => {
+                    URL.revokeObjectURL(audioUrl);
+                    reject(new Error('Audio playback failed'));
+                };
+                
+                audio.play().catch(reject);
+            });
+        }
+
+        // Enhanced browser speech synthesis
+        async function speakWithBrowserEnhanced(text) {
+            if (!('speechSynthesis' in window)) {
+                throw new Error('Speech synthesis not supported');
+            }
+            
+            return new Promise((resolve, reject) => {
+                // Stop any current speech
+                speechSynthesis.cancel();
+                
+                // Wait a bit for cancellation to complete
+                setTimeout(() => {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    
+                    // Enhanced settings for mobile
+                    utterance.lang = 'en-US';
+                    utterance.rate = 0.7;  // Slower for better comprehension
+                    utterance.pitch = 1.0;
+                    utterance.volume = 1.0;
+                    
+                    // Try to get a good voice
+                    const voices = speechSynthesis.getVoices();
+                    let englishVoice = null;
+                    
+                    // Try different voice selection strategies
+                    if (voices.length > 0) {
+                        // First try to find Google or Microsoft voices
+                        englishVoice = voices.find(voice => 
+                            voice.lang.startsWith('en') && 
+                            (voice.name.includes('Google') || voice.name.includes('Microsoft'))
+                        );
+                        
+                        // If not found, try any English voice
+                        if (!englishVoice) {
+                            englishVoice = voices.find(voice => voice.lang.startsWith('en'));
+                        }
+                        
+                        // If still not found, try any voice
+                        if (!englishVoice) {
+                            englishVoice = voices[0];
+                        }
+                    }
+                    
+                    if (englishVoice) {
+                        utterance.voice = englishVoice;
+                        console.log('Using voice:', englishVoice.name);
+                    }
+                    
+                    utterance.onstart = () => {
+                        console.log('Speech started');
+                    };
+                    
+                    utterance.onend = () => {
+                        console.log('Speech ended');
+                        resolve();
+                    };
+                    
+                    utterance.onerror = (event) => {
+                        console.error('Speech error:', event.error);
+                        reject(new Error('Speech synthesis failed: ' + event.error));
+                    };
+                    
+                    // Speak the text
+                    try {
+                        speechSynthesis.speak(utterance);
+                    } catch (error) {
+                        reject(error);
+                    }
+                }, 100);
+            });
+        }
+
+        // Microsoft Edge TTS
+        async function speakWithMicrosoftTTS(text) {
+            const apiUrl = `https://speech.platform.bing.com/consumer/speech/synthesize/readaloud/voices/list?trustedclientid=6A5AA1D4EAFF4E9EBC6D459F8B1218E4`;
+            
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error('Microsoft TTS not available');
+                }
+                
+                // This is a simplified implementation
+                // In practice, you'd need to implement the full Microsoft TTS API
+                throw new Error('Microsoft TTS not fully implemented');
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        // Simple fallback using basic Web Speech API
+        async function speakWithAudioFile(text) {
+            if (!('speechSynthesis' in window)) {
+                throw new Error('Speech synthesis not supported');
+            }
+            
+            return new Promise((resolve, reject) => {
+                const utterance = new SpeechSynthesisUtterance(text);
+                
+                // Basic settings
+                utterance.lang = 'en';
+                utterance.rate = 0.8;
+                utterance.pitch = 1.0;
+                utterance.volume = 1.0;
+                
+                utterance.onend = () => resolve();
+                utterance.onerror = (event) => reject(new Error('Speech failed: ' + event.error));
+                
+                try {
+                    speechSynthesis.speak(utterance);
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        }
+
+        // Speak word
+        async function speakWord(word) {
+            showLoading(true);
+            
+            try {
+                await tryMultiplePronunciationMethods(word);
+            } catch (error) {
+                console.error('All pronunciation methods failed for word:', error);
+                showMessage('Unable to play audio for word: ' + word, 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Stop all playback
+        function stopAllPlayback() {
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+            }
+            isPlaying = false;
+            englishText.classList.remove('playing');
+            playBtn.classList.remove('playing');
+        }
+
+        // Show/hide loading
+        function showLoading(show) {
+            if (show) {
+                loading.classList.add('show');
+            } else {
+                loading.classList.remove('show');
+            }
+        }
+
+        // Show message
+        function showMessage(message, type = 'info') {
+            const existingMessage = document.querySelector('.error-message, .success-message');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type === 'error' ? 'error-message' : 'success-message';
+            messageDiv.textContent = message;
+            
+            const setupPanel = document.querySelector('.setup-panel');
+            setupPanel.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.remove();
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
